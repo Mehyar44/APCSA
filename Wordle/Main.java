@@ -3,8 +3,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("WORDLE\n");
-
         ArrayList<String> answers = createWordleAnswers();
          ArrayList<String> alphabet = new ArrayList<String>(Arrays.asList("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"));
         ArrayList<String> allWords = createWords();
@@ -52,7 +50,7 @@ public class Main {
     public static ArrayList<String> createWordleAnswers() {
         ArrayList<String> wordleAnswers = new ArrayList<String>();
         try {
-            Scanner s = new Scanner(new File("answers.txt"));
+            Scanner s = new Scanner(new File("src/main/java/answers.txt"));
             while (s.hasNext()) {
                 String answer = s.nextLine().trim().toLowerCase();
                 wordleAnswers.add(answer);
@@ -67,7 +65,7 @@ public class Main {
     public static ArrayList<String> createWords() {
         ArrayList<String> words = new ArrayList<String>();
         try {
-            Scanner s = new Scanner(new File("words.txt"));
+            Scanner s = new Scanner(new File("src/main/java/words.txt"));
             while (s.hasNext()) {
                 String word = s.nextLine().trim().toLowerCase();
                 words.add(word);
