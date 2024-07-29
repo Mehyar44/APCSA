@@ -2,39 +2,31 @@ import java.util.*;
 
 public class Main {
   public static void main(String[] args) {
-    System.out.println("Welcome to Sudoku!!");
-
     Scanner s = new Scanner(System.in);
-    System.out.print("\nChoose a difficulty (easy, medium, hard, empty): ");
-    String diff = s.nextLine();
-    int[][] sudoku = createBoard(diff);
+    System.out.print("Do you want an empty board (1) or a started board (2): ");
+    int style = s.nextInt();
+    int[][] sudoku = createBoard(style);
 
     while (!win(sudoku)) {
       printBoard(sudoku);
 
-      System.out.print("\nChoose a location (Answer in \"row,col\" from 1-9): ");
-      String answer = s.nextLine();
-      int rowAns = Integer.parseInt(answer.substring(0, 1)) - 1;
-      int colAns = Integer.parseInt(answer.substring(2, 3)) - 1;
+      System.out.print("\nChoose a piece by picking a row and column (Ex - 73 where 7 is the row and 3 is the column): ");
+      int ans = s.nextInt();
+      int rowAns = ans / 10 - 1;
+      int colAns = ans % 10 - 1;
+      
+      System.out.print("\nChoose a number to insert into the location (1-9 or -1 to go back or 0 to clear the space): ");
+      int numAns = s.nextInt();
 
-      if(sudoku[rowAns][colAns] != 0) {
-        System.out.println("\nThere is already a number there.\n");
-        continue;
-      }
-
-      else {
-        System.out.print("\nChoose a number to insert into the location (1-9 or -1 to go back): ");
-        int numAns = s.nextInt();
-
-        if (numAns == -1) System.out.println("\nGoing back....\n");
-
-        else if (megaFail(rowAns, colAns, numAns, sudoku)) System.out.println("\nThis number does not work here\n");
+      if (numAns != -1) {
+        if (megaFail(rowAns, colAns, numAns, sudoku)) System.out.println("\nThis number does not work here");
 
         else {
           sudoku[rowAns][colAns] = numAns;
-          System.out.println("\nNumber has been placed.\n");
+          System.out.println("\nNumber has been placed.");
         }
       }
+      
 
       s.nextLine();
     }
@@ -43,7 +35,7 @@ public class Main {
     System.out.println("\nCongratulations!! You won!!");
   }
 
-  public static int[][] createBoard(String difficulty) {
+  public static int[][] createBoard(int style) {
     int[][] board = new int[9][9];
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
@@ -51,13 +43,9 @@ public class Main {
       }
     }
 
-    int diff = 0;
-    if (difficulty.equals("easy")) diff = 50;
-    if (difficulty.equals("medium")) diff = 30;
-    if (difficulty.equals("hard")) diff = 15;
-    if (difficulty.equals("empty")) diff = 0;
+    if (style == 1) return board;
 
-    for (int j = 0; j < diff; j++) {
+    for (int j = 0; j < 44; j++) {
       int num = (int) (Math.random() * 9) + 1;
       int row = (int) (Math.random() * 9);
       int col = (int) (Math.random() * 9);
@@ -72,15 +60,13 @@ public class Main {
   }
 
   public static void printBoard(int[][] board) {
+    System.out.println();
     for (int i = 0; i < board.length; i++) {
-      if (i % 3 == 0 && i != 0) {
-        System.out.println("----+-----+----");
-      }
+      if (i % 3 == 0 && i != 0)  System.out.println("       ----+-----+----");
+      System.out.print("Row " + (i+1) + ": ");
       for (int j = 0; j < board[i].length; j++) {
         System.out.print(board[i][j]);
-        if (j % 3 == 2 && j != 8) {
-          System.out.print(" | ");
-        }
+        if (j % 3 == 2 && j != 8) System.out.print(" | ");
       }
       System.out.println();
     }
@@ -112,7 +98,8 @@ public class Main {
   }
 
   public static boolean megaFail(int row, int col, int num, int[][] arr) {
-    return verticalFail(col, num, arr) || horizontalFail(row, num, arr) || squareFail(row, col, num, arr);
+    if (num != 0) return verticalFail(col, num, arr) || horizontalFail(row, num, arr) || squareFail(row, col, num, arr);
+    return false;
   }
 
   public static boolean win(int[][] arr) {
